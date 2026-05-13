@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-
 import logging
 import os
 import tempfile
@@ -9,12 +8,17 @@ from telegram.ext import Application, MessageHandler, CommandHandler, filters, C
 from groq import Groq
 
 TOKEN = "8503206701:AAHms14tr7t2Y2qx74QaoOCZn74I104J_n0"
-GURUH_ID = -1001210486415
 OWNER_ID = 1407125509
 GROQ_API_KEY = "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"
 
-groq_client = Groq(api_key=GROQ_API_KEY)
+# Guruh va kanal ro'yxati
+TARGETS = [
+    "@asakaakfaaksessuar",  # 1-guruh
+    "@tayhu_asaka",          # 2-guruh
+    "@windoorline_asaka",    # Kanal
+]
 
+groq_client = Groq(api_key=GROQ_API_KEY)
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -23,11 +27,12 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def matn_qabul(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_user.id != OWNER_ID:
         return
-    try:
-        await context.bot.send_message(chat_id=GURUH_ID, text=update.message.text)
-        await update.message.reply_text("✅ Xabar guruhga jo'natildi!")
-    except Exception as e:
-        await update.message.reply_text(f"❌ Xato: {e}")
+    for target in TARGETS:
+        try:
+            await context.bot.send_message(chat_id=target, text=update.message.text)
+        except Exception as e:
+            await update.message.reply_text(f"❌ Xato ({target}): {e}")
+    await update.message.reply_text("✅ Xabar hammaga jo'natildi!")
 
 async def ovoz_qabul(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_user.id != OWNER_ID:
@@ -50,28 +55,34 @@ async def ovoz_qabul(update: Update, context: ContextTypes.DEFAULT_TYPE):
         if not matn:
             await update.message.reply_text("❌ Ovozdan matn aniqlanmadi.")
             return
-        await context.bot.send_message(chat_id=GURUH_ID, text=f"🎙 Ovozli xabar:\n\n{matn}")
-        await update.message.reply_text(f"✅ Guruhga jo'natildi!\n\n📝 Matn:\n{matn}")
+        for target in TARGETS:
+            try:
+                await context.bot.send_message(chat_id=target, text=f"🎙 Ovozli xabar:\n\n{matn}")
+            except Exception as e:
+                await update.message.reply_text(f"❌ Xato ({target}): {e}")
+        await update.message.reply_text(f"✅ Hammaga jo'natildi!\n\n📝 Matn:\n{matn}")
     except Exception as e:
         await update.message.reply_text(f"❌ Xato: {e}")
 
 async def rasm_qabul(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_user.id != OWNER_ID:
         return
-    try:
-        await context.bot.send_photo(chat_id=GURUH_ID, photo=update.message.photo[-1].file_id, caption=update.message.caption or "")
-        await update.message.reply_text("✅ Rasm guruhga jo'natildi!")
-    except Exception as e:
-        await update.message.reply_text(f"❌ Xato: {e}")
+    for target in TARGETS:
+        try:
+            await context.bot.send_photo(chat_id=target, photo=update.message.photo[-1].file_id, caption=update.message.caption or "")
+        except Exception as e:
+            await update.message.reply_text(f"❌ Xato ({target}): {e}")
+    await update.message.reply_text("✅ Rasm hammaga jo'natildi!")
 
 async def video_qabul(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_user.id != OWNER_ID:
         return
-    try:
-        await context.bot.send_video(chat_id=GURUH_ID, video=update.message.video.file_id, caption=update.message.caption or "")
-        await update.message.reply_text("✅ Video guruhga jo'natildi!")
-    except Exception as e:
-        await update.message.reply_text(f"❌ Xato: {e}")
+    for target in TARGETS:
+        try:
+            await context.bot.send_video(chat_id=target, video=update.message.video.file_id, caption=update.message.caption or "")
+        except Exception as e:
+            await update.message.reply_text(f"❌ Xato ({target}): {e}")
+    await update.message.reply_text("✅ Video hammaga jo'natildi!")
 
 def main():
     app = Application.builder().token(TOKEN).build()

@@ -6,7 +6,7 @@ from pathlib import Path
 
 from telethon import TelegramClient, events
 from telethon.tl.types import User
-import google.generativeai as genai
+import google.genai as genai
 
 API_ID = 37827998
 API_HASH = "087f2975b686ea86cda1baa389ae641a"

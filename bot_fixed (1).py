@@ -94,7 +94,8 @@ async def handle_message(event):
     if not text:
         return
 
-    source = "shaxsiy" if event.is_private else "guruh"
+   if not event.is_private:
+    return source = "shaxsiy" if event.is_private else "guruh"
 
     keyword_reply = check_keywords(text)
     if keyword_reply:

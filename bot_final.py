@@ -6,8 +6,7 @@ from pathlib import Path
 
 from telethon import TelegramClient, events
 from telethon.tl.types import User
-import google.genai as genai
-
+from google import genai
 API_ID = 37827998
 API_HASH = "087f2975b686ea86cda1baa389ae641a"
 GEMINI_API_KEY = "AIzaSyAc29KOWLn35djlLAz-t_GPmtz5bzFGeyY"
@@ -29,15 +28,7 @@ LOG_FILE = "xabarlar_log.json"
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(message)s")
 logger = logging.getLogger(__name__)
 
-genai.configure(api_key=GEMINI_API_KEY)
-gemini = genai.GenerativeModel(
-    model_name="gemini-2.0-flash",
-    system_instruction=(
-        "Sen " + YOUR_NAME + " nomidan avtomatik javob beruvchi yordamchisan. "
-        + YOUR_NAME + " hozir band. Uning nomidan samimiy va qisqa javob ber. "
-        "Har doim O'zbek tilida javob ber. "
-        "1-2 jumladan oshirma."
-    )
+client_ai = genai.Client(api_key=GEMINI_API_KEY)
 )
 
 client = TelegramClient("session", API_ID, API_HASH)
